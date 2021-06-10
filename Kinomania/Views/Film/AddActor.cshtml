@@ -1,0 +1,28 @@
+﻿@model Kinomania.Models.Actor
+@{
+    ViewData["Title"] = "AddFilm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Add new film</h1>
+<form asp-action="AddActor" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="FirstName"></label>
+        <input asp-for="FirstName" class="form-control" type="text" name="FirstName" />
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName"></label>
+        <input asp-for="LastName" class="form-control" type="text" name="LastName" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Birthday">Birthday</label>
+        <input asp-for="Birthday" class="form-control" type="date" name="Birthday" />
+    </div>
+    <div class="form-group">
+        <label asp-for="PhotoFile"></label>
+        <input asp-for="PhotoFile" type="file" name="PhotoFile" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Add" class="btn btn-primary" />
+    </div>
+</form>

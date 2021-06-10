@@ -1,0 +1,37 @@
+﻿@model Kinomania.Models.Film
+@{
+    ViewData["Title"] = "AddFilm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Add new film</h1>
+<form asp-action="AddFilm" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" type="text" name="Name" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ReleaseDate">Release date</label>
+        <input asp-for="ReleaseDate" class="form-control" type="date" name="ReleaseDate" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Producer"></label>
+        <input asp-for="Producer" class="form-control" type="text" name="Producer" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Budget"></label>
+        <input asp-for="Budget" class="form-control" type="number" name="Budget" />
+    </div>
+    <div class="form-group">
+        <label asp-for="PosterFile"></label>
+        <input asp-for="PosterFile" type="file" name="PosterFile" />
+    </div>
+    <div class="form-group">
+        <label>Genres</label>
+        <select multiple name="Genres" id="Genres" asp-items="@new SelectList(ViewBag.Genres)">
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Add" class="btn btn-primary" />
+    </div>
+</form>

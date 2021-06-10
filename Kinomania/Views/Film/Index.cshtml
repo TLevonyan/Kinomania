@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Kinomania.Models.Film>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@foreach (Kinomania.Models.Film item in Model)
+{
+    <a asp-action="Details" asp-route-id="@item.Id">
+        <img src="@item.PosterPath" alt="@item.Name">
+    </a>
+}
+
