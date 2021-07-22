@@ -13,7 +13,7 @@ namespace Kinomania.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(1, MinimumLength = 300)]
+        [StringLength(300,MinimumLength = 1)]
         public string Body { get; set; }
 
         public DateTime Datetime { get; set; } = DateTime.Now;

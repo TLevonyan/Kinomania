@@ -24,11 +24,16 @@
     </div>
     <div class="form-group">
         <label asp-for="PosterFile"></label>
-        <input asp-for="PosterFile" type="file" name="PosterFile" />
+        <input asp-for="PosterFile" type="file" accept="image/*" name="PosterFile" />
     </div>
     <div class="form-group">
         <label>Genres</label>
-        <select multiple name="Genres" id="Genres" asp-items="@new SelectList(ViewBag.Genres)">
+        <select asp-for="SelectedGenresValues" asp-items="@ViewBag.selectgenres">
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Actors</label>
+        <select asp-for="SelectedActorsValues" asp-items="@ViewBag.selectactors">
         </select>
     </div>
     <div class="form-group">

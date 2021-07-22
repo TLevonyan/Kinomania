@@ -9,15 +9,20 @@ namespace Kinomania.Models
     {
         Action,
         Adventure,
-        Anime,
+        Animation,
+        Biographical,
         Comedy,
+        Crime,
         Drama,
         Fantasy,
         Historical,
         Horror,
+        Musical,
         Mystery,
         Romance,
+        Sport,
         Thriller,
+        War,
         Western
     }
     public class Genre

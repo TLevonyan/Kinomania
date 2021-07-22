@@ -6,7 +6,7 @@ using Kinomania.Data;
 
 namespace Kinomania.Models.Repositories
 {
-    interface IRatingRepository
+    public interface IRatingRepository
     {
         Rating GetRatingByFilmAndUser(int filmId, string userId);
         IEnumerable<Rating> GetRatingsByFilm(int filmId);

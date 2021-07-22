@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Kinomania.Models.Repositories
 {
-    interface IReviewRepository
+    public interface IReviewRepository
     {
         IEnumerable<Review> GetReviewsByFilm(int filmId);
         Review AddNewReview(Review review);
         Review UpdateReview(Review review);
+        void DeleteReviewById(int id);
+        void DeleteReview(Review review);
     }
 }

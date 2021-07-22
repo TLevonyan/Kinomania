@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Kinomania.Data
 {
@@ -19,6 +20,14 @@ namespace Kinomania.Data
         public string LastName { get; set; }
 
         public IList<UserGenre> UsersGenres { get; set; }
+
+
+
+        [NotMapped]
+        public IList<Genre> Genres { get; set; }
+
+        [NotMapped]
+        public List<int> SelectedGenresValues { get; set; }
     }
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

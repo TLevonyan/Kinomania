@@ -4,9 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Kinomania.Data;
+using Kinomania.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Kinomania.Areas.Identity.Pages.Account.Manage
 {
@@ -14,11 +16,14 @@ namespace Kinomania.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ApplicationDbContext _dbcontext;
 
         public IndexModel(
+            ApplicationDbContext dbContext,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager)
         {
+            _dbcontext = dbContext;
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -46,6 +51,12 @@ namespace Kinomania.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "Select genres")]
+            public List<int> SelectedGenresValues { get; set; }
+
+            [Display(Name = "Liked genres")]
+            public List<UserGenre> LikedGenres { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -55,11 +66,13 @@ namespace Kinomania.Areas.Identity.Pages.Account.Manage
 
             Username = userName;
 
+
             Input = new InputModel
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                LikedGenres = _dbcontext.UsersGenres.Where(x => x.UserId == user.Id).ToList()
             };
         }
 
@@ -70,6 +83,15 @@ namespace Kinomania.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
+
+            var selectedgenres = new List<SelectListItem>();
+
+            foreach (Genre genre in _dbcontext.Genres.ToList())
+            {
+                selectedgenres.Add(new SelectListItem { Text = genre.Name.ToString(), Value = genre.Id.ToString() });
+            }
+
+            ViewData["SelectedGenres"] = selectedgenres;
 
             await LoadAsync(user);
             return Page();
@@ -108,6 +130,31 @@ namespace Kinomania.Areas.Identity.Pages.Account.Manage
             if (Input.LastName != user.LastName)
             {
                 user.LastName = Input.LastName;
+            }
+
+            if(Input.SelectedGenresValues != null)
+            {
+                user.Genres = new List<Genre>();
+
+                List<UserGenre> olduserGenres = _dbcontext.UsersGenres.Where(x => x.UserId == user.Id).ToList();
+                if (olduserGenres != null)
+                {
+                    _dbcontext.UsersGenres.RemoveRange(olduserGenres);
+                }
+
+                for (int i = 0; i < Input.SelectedGenresValues.Count; i++)
+                {
+                    Genre genre = _dbcontext.Genres.Find(Input.SelectedGenresValues[i]);
+                    user.Genres.Add(genre);
+                }
+
+                for (int i = 0; i < user.Genres?.Count; i++)
+                {
+                    UserGenre usergenre = new UserGenre { User = user, Genre = user.Genres[i] };
+                    _dbcontext.UsersGenres.Add(usergenre);
+                }
+
+                _dbcontext.SaveChanges();
             }
 
             await _signInManager.RefreshSignInAsync(user);

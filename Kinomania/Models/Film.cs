@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -20,6 +21,7 @@ namespace Kinomania.Models
         [Required]
         public string PosterPath { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime ReleaseDate { get; set; }
 
         public string Producer { get; set; }
@@ -35,11 +37,23 @@ namespace Kinomania.Models
         public IList<Rating> Ratings { get; set; }
 
         
+
+        [NotMapped]
+        public double Rating { get; set; }
+
         [NotMapped]
         public IFormFile PosterFile { get; set; }
 
+        [NotMapped]
         public IList<Actor> Actors { get; set; }
 
+        [NotMapped]
         public IList<Genre> Genres { get; set; }
+
+        [NotMapped]
+        public List<int> SelectedGenresValues { get; set; }
+
+        [NotMapped]
+        public List<int> SelectedActorsValues { get; set; }
     }
 }

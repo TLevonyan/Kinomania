@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Add new film</h1>
+<h1>Add new actor</h1>
 <form asp-action="AddActor" enctype="multipart/form-data">
     <div class="form-group">
         <label asp-for="FirstName"></label>
@@ -20,7 +20,12 @@
     </div>
     <div class="form-group">
         <label asp-for="PhotoFile"></label>
-        <input asp-for="PhotoFile" type="file" name="PhotoFile" />
+        <input asp-for="PhotoFile" type="file" accept="image/*" name="PhotoFile" />
+    </div>
+    <div class="form-group">
+        <label>Films</label>
+        <select asp-for="SelectedFilmsValues" asp-items="@ViewBag.selectfilms">
+        </select>
     </div>
     <div class="form-group">
         <input type="submit" value="Add" class="btn btn-primary" />

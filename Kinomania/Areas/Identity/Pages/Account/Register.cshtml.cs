@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Kinomania.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Kinomania.Areas.Identity.Pages.Account
 {
@@ -22,15 +24,18 @@ namespace Kinomania.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _dbcontext;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
+            ApplicationDbContext dbContext,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
+            _dbcontext = dbContext;
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
@@ -61,6 +66,9 @@ namespace Kinomania.Areas.Identity.Pages.Account
             [Display(Name = "Username")]
             public string UserName { get; set; }
 
+            [Display(Name = "Liked Genres")]
+            public List<int> SelectedGenresValues { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -82,6 +90,16 @@ namespace Kinomania.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+
+            var selectedgenres = new List<SelectListItem>();
+
+            foreach (Genre genre in _dbcontext.Genres.ToList())
+            {
+                selectedgenres.Add(new SelectListItem { Text = genre.Name.ToString(), Value = genre.Id.ToString() });
+            }
+
+            ViewData["SelectedGenres"] = selectedgenres;
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -91,10 +109,32 @@ namespace Kinomania.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { FirstName = Input.FirstName, LastName = Input.LastName, UserName = Input.UserName, Email = Input.Email };
+
+                if (Input.SelectedGenresValues != null)
+                {
+                    user.Genres = new List<Genre>();
+
+                    for (int i = 0; i < Input.SelectedGenresValues.Count; i++)
+                    {
+                        Genre genre = _dbcontext.Genres.Find(Input.SelectedGenresValues[i]);
+                        user.Genres.Add(genre);
+                    }
+
+                    for (int i = 0; i < user.Genres?.Count; i++)
+                    {
+                        UserGenre usergenre = new UserGenre { User = user, Genre = user.Genres[i] };
+                        _dbcontext.UsersGenres.Add(usergenre);
+                    }
+
+                }
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "User");
                     _logger.LogInformation("User created a new account with password.");
+
+                    _dbcontext.SaveChanges();
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

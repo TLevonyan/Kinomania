@@ -1,0 +1,52 @@
+﻿@model Kinomania.Models.Actor
+
+@{
+    ViewData["Title"] = "ActorDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Model.FirstName @Model.LastName</h1>
+
+<div>
+    <hr />
+    <img src="~/images/@Model.PhotoPath" alt="@Model.LastName" width="240" height="380">
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Birthday)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Birthday)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Films)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (Kinomania.Models.ActorFilm item in Model.ActorsFilms)
+            {
+                <a asp-action="FilmDetails" asp-route-id="@item.FilmId">@item.Film.Name</a>
+                <h7>|</h7>
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    @if ((await AuthorizationService.AuthorizeAsync(User, "RequireAdministratorRole")).Succeeded)
+    {
+        <a asp-action="EditActor" asp-route-id="@Model.Id">Edit</a>
+        <h7>|</h7>
+        <a asp-action="DeleteActor" asp-route-id="@Model.Id">Delete</a>
+    }
+    | <a asp-action="Index">Back to List</a>
+</div>

@@ -23,6 +23,7 @@ namespace Kinomania.Models
         [Required]
         public string PhotoPath { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime Birthday { get; set; }
 
         public IList<ActorFilm> ActorsFilms { get; set; }
@@ -32,6 +33,10 @@ namespace Kinomania.Models
         [NotMapped]
         public IFormFile PhotoFile { get; set; }
 
+        [NotMapped]
         public IList<Film> Films { get; set; }
+
+        [NotMapped]
+        public List<int> SelectedFilmsValues { get; set; }
     }
 }

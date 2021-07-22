@@ -28,6 +28,16 @@
                 <input asp-for="Input.PhoneNumber" class="form-control" />
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                @Html.DisplayNameFor(model => model.Input.LikedGenres):
+                @foreach (Kinomania.Models.UserGenre item in Model.Input.LikedGenres)
+                {<h7>@item.Genre.Name, </h7>}
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.SelectedGenresValues"></label>
+                <select asp-for="Input.SelectedGenresValues" asp-items="@((List<SelectListItem>)ViewData["SelectedGenres"])">
+                </select>
+            </div>
             <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
         </form>
     </div>

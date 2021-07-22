@@ -5,14 +5,16 @@ using System.Threading.Tasks;
 
 namespace Kinomania.Models.Repositories
 {
-    interface IFilmRepository
+    public interface IFilmRepository : IRatingRepository,IReviewRepository
     {
-        IEnumerable<Film> AllFilms();
-        Film GetFilmById(int id);
+        List<Film> AllFilms();
+        Task<Film> GetFilmByIdAsync(int id);
         Film UpdateFilm(Film film);
         IEnumerable<Film> GetFilmsByGenre(Genre genre);
         IEnumerable<Film> GetFilmsByActor(Actor actor);
-        Film AddNewFilm(Film film, IList<Actor> actors, IList<Genre> genres);
+        Task<Film> AddNewFilmAsync(Film film);
+        void DeleteFilm(Film film);
+        void DeleteFilmById(int id);
 
     }
 }

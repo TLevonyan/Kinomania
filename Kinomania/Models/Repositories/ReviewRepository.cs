@@ -20,6 +20,18 @@ namespace Kinomania.Models.Repositories
             return review;
         }
 
+        public void DeleteReview(Review review)
+        {
+            dbContext.Reviews.Remove(review);
+            dbContext.SaveChanges();
+        }
+
+        public void DeleteReviewById(int id)
+        {
+            dbContext.Reviews.Remove(dbContext.Reviews.Find(id));
+            dbContext.SaveChanges();
+        }
+
         public IEnumerable<Review> GetReviewsByFilm(int filmId)
         {
             return dbContext.Reviews.Where(x => x.FilmId == filmId).ToList();

@@ -1,13 +1,40 @@
 ﻿@model IEnumerable<Kinomania.Models.Film>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Kinomania";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<form asp-action="Index">
+    <p>
+        Search: <input type="text" name="searchString" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+@if (ViewBag.RecommandatedFilms != null)
+{
+    <p />
+    <h3>Recommandated Films </h3>
+    <br>
+    @foreach (Kinomania.Models.Film item in ViewBag.RecommandatedFilms)
+    {
+        <div class="figure">
+            <a asp-action="FilmDetails" asp-route-id="@item.Id">
+                <img src="~/images/@item.PosterPath" alt="@item.Name" width="240" height="380">
+                <div class="figure-caption" style="text-align:center; color:coral; font-size:larger"> @item.Name </div>
+            </a>
+        </div>
+    }
+}
+<p />
+<h3>Film catalog</h3>
+<br>
 @foreach (Kinomania.Models.Film item in Model)
 {
-    <a asp-action="Details" asp-route-id="@item.Id">
-        <img src="@item.PosterPath" alt="@item.Name">
-    </a>
+    <div class="figure">
+        <a asp-action="FilmDetails" asp-route-id="@item.Id">
+            <img src="~/images/@item.PosterPath" alt="@item.Name" width="240" height="380">
+            <div class="figure-caption" style="text-align:center; color:coral; font-size:larger"> @item.Name </div>
+        </a>
+    </div>
 }
 
